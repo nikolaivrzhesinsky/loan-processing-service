@@ -1,0 +1,11 @@
+databaseChangeLog:
+  - changeSet:
+      id: addForeignKeyConstraint
+      author: Vrzesinsky
+      changes:
+        - addForeignKeyConstraint:
+            baseColumnNames: tariff_id
+            baseTableName: order
+            referencedColumnNames: id
+            referencedTableName: tariff
+            constraintName: fk_order_tariff

@@ -1,0 +1,28 @@
+databaseChangeLog:
+  - changeSet:
+      id: create-tariff
+      author: Vrzesinsky
+      changes:
+        - tagDatabase:
+            tag: db_tariff_tag
+        - createTable:
+            tableName: tariff
+            columns:
+              - column:
+                  name: id
+                  type: bigint
+                  autoIncrement: true
+                  constraints:
+                    primaryKey: true
+                    nullable: false
+              - column:
+                  name: type
+                  type: varchar(100)
+                  constraints:
+                    nullable: false
+                    unique: true
+              - column:
+                  name: interest_rate
+                  type: varchar(100)
+
+
