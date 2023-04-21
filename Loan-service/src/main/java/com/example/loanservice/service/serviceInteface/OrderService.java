@@ -5,5 +5,5 @@ import com.example.loanservice.dto.response.RespoonseUtil.ResponseOrderId;
 
 public interface OrderService {
 
-    ResponseOrderId createOrder(RequestOrder requestOrder);
+    ResponseOrderId handlingOrder(RequestOrder requestOrder);
 }
