@@ -5,3 +5,5 @@ databaseChangeLog:
       file: db/changelog/changeset/create-order-table.yaml
   - include:
       file: db/changelog/changeset/create-foreignKey-order-tariff.yaml
+  - include:
+      file: db/changelog/changeset/changeset-insert/insert-tariff-table.yaml

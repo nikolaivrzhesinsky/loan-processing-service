@@ -1,0 +1,41 @@
+databaseChangeLog:
+  - changeSet:
+      id: insert_data_tariff
+      author: Vrzesinsky
+      changes:
+        - insert:
+            tableName: tariff
+            columns:
+              - column:
+                  name: type
+                  value: "CONSUMER"
+              - column:
+                  name: interest_rate
+                  value: "8-15%"
+        - insert:
+            tableName: tariff
+            columns:
+              - column:
+                  name: type
+                  value: "MORTGAGE"
+              - column:
+                  name: interest_rate
+                  value: "9-17%"
+        - insert:
+            tableName: tariff
+            columns:
+              - column:
+                  name: type
+                  value: "POS"
+              - column:
+                  name: interest_rate
+                  value: "4-9%"
+        - insert:
+            tableName: tariff
+            columns:
+              - column:
+                  name: type
+                  value: "CREDIT_CARD"
+              - column:
+                  name: interest_rate
+                  value: "10-20%"
