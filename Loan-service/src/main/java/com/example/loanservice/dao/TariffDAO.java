@@ -20,5 +20,13 @@ public class TariffDAO {
         );
     }
 
+    public boolean existByTariffId(Long tariffId) {
+
+        String query = "SELECT EXISTS(SELECT * FROM tariff WHERE id= ?)";
+
+        return Boolean.TRUE.equals(jdbcTemplate.queryForObject(
+                query, new Object[]{tariffId}, Boolean.class));
+    }
+
 
 }

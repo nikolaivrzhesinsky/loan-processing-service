@@ -1,14 +1,12 @@
 package com.example.loanservice.controller;
 
+import com.example.loanservice.dao.OrderDAO;
 import com.example.loanservice.dto.request.RequestOrder;
 import com.example.loanservice.dto.response.ResponseMessageData;
 import com.example.loanservice.service.serviceInteface.OrderService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequestMapping("/loan-service")
@@ -16,6 +14,7 @@ import org.springframework.web.bind.annotation.RestController;
 public class OrderController {
 
     private final OrderService orderService;
+    private final OrderDAO orderDAO;
 
     @PostMapping("/order")
     public ResponseEntity<?> addOrder(@RequestBody RequestOrder order) {
@@ -28,6 +27,12 @@ public class OrderController {
 //    public Double checkRandom(){
 //        return orderServiceImpl.onCreateGenerateCredRat();
 //    }
+
+    @GetMapping("/orderByUserId/{userId}")
+    public ResponseEntity<?> showOrdersById(@PathVariable Long userId) {
+
+        return ResponseEntity.ok(orderDAO.findOrdersByUserId(userId));
+    }
 
 
 }

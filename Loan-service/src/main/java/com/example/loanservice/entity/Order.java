@@ -1,15 +1,13 @@
 package com.example.loanservice.entity;
 
 import com.example.loanservice.entity.enums.OrderStatus;
-import jakarta.persistence.EnumType;
-import jakarta.persistence.Enumerated;
 import jakarta.persistence.Id;
 import jakarta.persistence.Table;
 import lombok.*;
 
 import java.time.LocalDateTime;
 
-@Table(name = "order")
+@Table(name = "loan_order")
 @Getter
 @Setter
 @ToString
@@ -25,8 +23,6 @@ public class Order {
     private Long user_id;
     private Long tariff_id;
     private Double credit_rating;
-
-    @Enumerated(EnumType.STRING)
     private OrderStatus status;
 
     private LocalDateTime time_insert;
