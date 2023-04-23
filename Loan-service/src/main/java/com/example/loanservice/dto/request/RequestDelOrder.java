@@ -9,8 +9,8 @@ import lombok.Setter;
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
-public class RequestOrder {
+public class RequestDelOrder {
 
+    private String orderId;
     private Long userId;
-    private Long tariffId;
 }

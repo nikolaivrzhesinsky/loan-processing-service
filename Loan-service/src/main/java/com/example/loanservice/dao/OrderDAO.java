@@ -3,6 +3,7 @@ package com.example.loanservice.dao;
 import com.example.loanservice.entity.Order;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.jdbc.core.BeanPropertyRowMapper;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Repository;
@@ -30,6 +31,31 @@ public class OrderDAO {
 
         return jdbcTemplate.query("SELECT * FROM loan_order WHERE user_id= ?"
                 , new BeanPropertyRowMapper<>(Order.class), userId);
+    }
+
+    public String findOrderStatusById(String orderId) {
+
+        String query = "SELECT status FROM loan_order WHERE order_id= ?";
+        try {
+            String resStatus = jdbcTemplate.queryForObject(
+                    query, new Object[]{orderId}, String.class);
+            log.info(resStatus);
+            return resStatus;
+        } catch (EmptyResultDataAccessException e) {
+            return null;
+        }
+    }
+
+    public Order findOrderByOrderIdAndUserId(String orderId, Long userId) {
+
+        return jdbcTemplate.query("SELECT * FROM loan_order WHERE order_id= ? AND user_id= ?"
+                        , new BeanPropertyRowMapper<>(Order.class), orderId, userId)
+                .stream().findAny().orElse(null);
+    }
+
+    public void deleteOrderByOrderId(String orderId) {
+
+        jdbcTemplate.update("DELETE FROM loan_order WHERE order_id= ?", orderId);
     }
 
 

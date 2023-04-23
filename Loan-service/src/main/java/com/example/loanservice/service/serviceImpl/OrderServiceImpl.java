@@ -2,11 +2,13 @@ package com.example.loanservice.service.serviceImpl;
 
 import com.example.loanservice.dao.OrderDAO;
 import com.example.loanservice.dao.TariffDAO;
-import com.example.loanservice.dto.request.RequestOrder;
+import com.example.loanservice.dto.request.RequestDelOrder;
+import com.example.loanservice.dto.request.RequestNewOrder;
 import com.example.loanservice.dto.response.RespoonseUtil.ResponseOrderId;
+import com.example.loanservice.dto.response.RespoonseUtil.ResponseOrderStatus;
 import com.example.loanservice.entity.Order;
 import com.example.loanservice.entity.enums.OrderStatus;
-import com.example.loanservice.exception.customException.TARIFF_NOT_FOUND;
+import com.example.loanservice.exception.customException.*;
 import com.example.loanservice.service.serviceInteface.OrderService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -15,8 +17,8 @@ import org.springframework.stereotype.Service;
 import java.math.BigDecimal;
 import java.math.RoundingMode;
 import java.time.LocalDateTime;
+import java.util.List;
 import java.util.Objects;
-import java.util.Optional;
 import java.util.Random;
 import java.util.UUID;
 
@@ -29,32 +31,72 @@ public class OrderServiceImpl implements OrderService {
     private final OrderDAO orderDAO;
 
     @Override
-    public ResponseOrderId handlingOrder(RequestOrder requestOrder) {
+    public ResponseOrderId handlingNewOrder(RequestNewOrder requestOrder) {
 
         if (!tariffDAO.existByTariffId(requestOrder.getTariffId())) {
             throw new TARIFF_NOT_FOUND("Тариф не найден");
         }
-
         checkUsersOrders(requestOrder);
-
-
         Order newOrder = createOrder(requestOrder);
         orderDAO.save(newOrder);
 
         return new ResponseOrderId(newOrder.getOrder_id());
     }
 
-    private void checkUsersOrders(RequestOrder requestOrder) {
+    @Override
+    public ResponseOrderStatus showOrderStatus(String orderId) {
 
-        Optional<Order> orderByTariff = orderDAO
-                .findOrdersByUserId(requestOrder.getUserId())
-                .stream().filter(order -> Objects.equals(order.getTariff_id(), requestOrder.getTariffId()))
-                .findFirst();
-        log.info(orderByTariff.toString());
+        String orderStatus = orderDAO.findOrderStatusById(orderId);
+        log.info(orderStatus);
+        if (orderStatus != null) {
+            return new ResponseOrderStatus(orderStatus);
+        }
+        throw new ORDER_NOT_FOUND("Заявка не найдена");
+    }
+
+    @Override
+    public void delOrderFromDB(RequestDelOrder requestDelOrder) {
+
+        Order orderFromDB = orderDAO.findOrderByOrderIdAndUserId(
+                requestDelOrder.getOrderId(), requestDelOrder.getUserId());
+
+        if (orderFromDB == null) {
+            throw new ORDER_NOT_FOUND("Заявка не найдена");
+        }
+        if (orderFromDB.getStatus().equals(OrderStatus.IN_PROGRESS)) {
+            throw new ORDER_IMPOSSIBLE_TO_DELETE("Невозможно удалить заявку");
+        } else {
+            orderDAO.deleteOrderByOrderId(orderFromDB.getOrder_id());
+            log.info("Order was deleted");
+        }
     }
 
 
-    private Order createOrder(RequestOrder requestOrder) {
+    private void checkUsersOrders(RequestNewOrder requestOrder) {
+
+        List<Order> ordersByTariff = orderDAO
+                .findOrdersByUserId(requestOrder.getUserId());
+        ordersByTariff.stream()
+                .filter(order -> Objects.equals(order.getTariff_id(), requestOrder.getTariffId()))
+                .forEach(this::checkOrderStatus);
+    }
+
+    private void checkOrderStatus(Order orderByTariff) {
+
+        if (orderByTariff.getStatus().equals(OrderStatus.IN_PROGRESS)) {
+            throw new LOAN_CONSIDERATION("Order is already in consideration");
+        }
+        if (orderByTariff.getStatus().equals(OrderStatus.APPROVED)) {
+            throw new LOAN_ALREADY_APPROVED("Order was already approved");
+        }
+        if (orderByTariff.getStatus().equals(OrderStatus.REFUSED)
+                && orderByTariff.getTime_update().isBefore(orderByTariff.getTime_insert().plusMinutes(2))) {
+            throw new TRY_LATER("Try later");
+        }
+    }
+
+
+    private Order createOrder(RequestNewOrder requestOrder) {
 
         return Order.builder()
                 .order_id(onCreateOrderId())

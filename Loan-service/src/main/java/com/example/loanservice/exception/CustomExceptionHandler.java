@@ -1,7 +1,7 @@
 package com.example.loanservice.exception;
 
 import com.example.loanservice.dto.response.ResponseMessageError;
-import com.example.loanservice.exception.customException.TARIFF_NOT_FOUND;
+import com.example.loanservice.exception.customException.*;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.ControllerAdvice;
@@ -16,8 +16,55 @@ public class CustomExceptionHandler extends ResponseEntityExceptionHandler {
 
         ErrorMessage message = new ErrorMessage("TARIFF_NOT_FOUND"
                 , "Тариф не найден");
-        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(
-                new ResponseMessageError(message)
-        );
+        return ResponseEntity.status(HttpStatus.BAD_REQUEST)
+                .body(new ResponseMessageError(message)
+                );
     }
+
+    @ExceptionHandler(LOAN_CONSIDERATION.class)
+    public ResponseEntity<ResponseMessageError> handleLOAN_CONSIDERATIONException(Exception ex) {
+
+        ErrorMessage message = new ErrorMessage("LOAN_CONSIDERATION"
+                , "Order already in consideration");
+        return ResponseEntity.status(HttpStatus.BAD_REQUEST)
+                .body(new ResponseMessageError(message));
+    }
+
+    @ExceptionHandler(LOAN_ALREADY_APPROVED.class)
+    public ResponseEntity<ResponseMessageError> handleLOAN_ALREADY_APPROVEDException(Exception ex) {
+
+        ErrorMessage message = new ErrorMessage("LOAN_ALREADY_APPROVED"
+                , "Order was already approved");
+        return ResponseEntity.status(HttpStatus.BAD_REQUEST)
+                .body(new ResponseMessageError(message));
+    }
+
+    @ExceptionHandler(TRY_LATER.class)
+    public ResponseEntity<ResponseMessageError> handleTRY_LATERException(Exception ex) {
+
+        ErrorMessage message = new ErrorMessage("TRY_LATER"
+                , "Try to make order later");
+        return ResponseEntity.status(HttpStatus.BAD_REQUEST)
+                .body(new ResponseMessageError(message));
+    }
+
+    @ExceptionHandler(ORDER_NOT_FOUND.class)
+    public ResponseEntity<ResponseMessageError> handleORDER_NOT_FOUNDException(Exception ex) {
+
+        ErrorMessage message = new ErrorMessage("ORDER_NOT_FOUND"
+                , "Заявка не найдена");
+        return ResponseEntity.status(HttpStatus.BAD_REQUEST)
+                .body(new ResponseMessageError(message));
+    }
+
+    @ExceptionHandler(ORDER_IMPOSSIBLE_TO_DELETE.class)
+    public ResponseEntity<ResponseMessageError> handleORDER_IMPOSSIBLE_TO_DELETEException(Exception ex) {
+
+        ErrorMessage message = new ErrorMessage("ORDER_IMPOSSIBLE_TO_DELETE"
+                , "Невозможно удалить заявку");
+        return ResponseEntity.status(HttpStatus.BAD_REQUEST)
+                .body(new ResponseMessageError(message));
+    }
+
+
 }
