@@ -12,7 +12,10 @@ import com.example.loanservice.exception.customException.*;
 import com.example.loanservice.service.serviceInteface.OrderService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import net.javacrumbs.shedlock.spring.annotation.SchedulerLock;
+import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.math.BigDecimal;
 import java.math.RoundingMode;
@@ -71,6 +74,29 @@ public class OrderServiceImpl implements OrderService {
         }
     }
 
+    @Override
+    @Scheduled(fixedRateString = "${schedule.fixedRate}")
+    @SchedulerLock(name = "orderService_resolveForLoanOrders")
+    public void resolveForLoanOrders() {
+
+        List<Order> orderList = orderDAO
+                .getOrdersByStatus(OrderStatus.IN_PROGRESS.toString());
+        orderList.forEach(this::getSolutionForOrder);
+    }
+
+    @Transactional
+    public void getSolutionForOrder(Order order) {
+
+        if (Math.random() < 0.5) {
+            order.setStatus(OrderStatus.REFUSED);
+        } else {
+            order.setStatus(OrderStatus.APPROVED);
+        }
+        order.setTime_update(onCreateUpdateTime());
+        log.info(order.getStatus().toString());
+
+        orderDAO.update(order.getId(), order);
+    }
 
     private void checkUsersOrders(RequestNewOrder requestOrder) {
 
@@ -90,7 +116,7 @@ public class OrderServiceImpl implements OrderService {
             throw new LOAN_ALREADY_APPROVED("Order was already approved");
         }
         if (orderByTariff.getStatus().equals(OrderStatus.REFUSED)
-                && orderByTariff.getTime_update().isBefore(orderByTariff.getTime_insert().plusMinutes(2))) {
+                && (orderByTariff.getTime_update().plusMinutes(2)).isAfter(LocalDateTime.now())) {
             throw new TRY_LATER("Try later");
         }
     }

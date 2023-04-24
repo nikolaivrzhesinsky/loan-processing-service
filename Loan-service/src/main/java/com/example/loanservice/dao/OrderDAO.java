@@ -58,5 +58,22 @@ public class OrderDAO {
         jdbcTemplate.update("DELETE FROM loan_order WHERE order_id= ?", orderId);
     }
 
+    public List<Order> getOrdersByStatus(String status) {
+
+        return jdbcTemplate.query("SELECT * FROM loan_order WHERE status= ?"
+                , new BeanPropertyRowMapper<>(Order.class), status);
+    }
+
+    public void update(Long id, Order updateOrder) {
+
+        jdbcTemplate.update("UPDATE loan_order SET order_id= ?,user_id= ?" +
+                        ",tariff_id= ?,credit_rating= ?,status= ?,time_insert= ?,time_update= ? " +
+                        "WHERE id= ?"
+                , updateOrder.getOrder_id(), updateOrder.getUser_id()
+                , updateOrder.getTariff_id(), updateOrder.getCredit_rating()
+                , updateOrder.getStatus().toString(), updateOrder.getTime_insert()
+                , updateOrder.getTime_update(), id);
+        log.info("Order was updated");
+    }
 
 }
