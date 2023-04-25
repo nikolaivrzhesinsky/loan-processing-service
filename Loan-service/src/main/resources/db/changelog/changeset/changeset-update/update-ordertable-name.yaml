@@ -1,0 +1,10 @@
+databaseChangeLog:
+  - changeSet:
+      id: change_tableName_to_loan_order
+      author: Vrzesinsky
+      changes:
+        - tagDatabase:
+            tag: db_loan-order_tag
+        - renameTable:
+            newTableName: loan_order
+            oldTableName: order
