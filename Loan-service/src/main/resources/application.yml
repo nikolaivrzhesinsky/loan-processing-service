@@ -3,3 +3,15 @@ spring:
     name: loan-order
   config:
     import: optional:configserver:http://localhost:8888
+#resilience4j:
+#  circuitbreaker:
+#    instances:
+#      loan-order:
+#        failure-rate-threshold: 60
+#        sliding-window-size: 5
+#        sliding-window-type: count-based
+#        wait-duration-in-open-state: 1m
+#        slow-call-duration-threshold: 1s
+#        permitted-number-of-calls-in-half-open-state: 3
+
+
