@@ -24,7 +24,19 @@ spring:
 schedule:
   fixedRate: PT02M
 
+resilience4j:
+  circuitbreaker:
+    instances:
+      loan-order:
+        failure-rate-threshold: 100
+        sliding-window-size: 1
+        sliding-window-type: count-based
+        wait-duration-in-open-state: 1m
+        slow-call-duration-threshold: 1s
+        permitted-number-of-calls-in-half-open-state: 1
+
 management:
   tracing:
     sampling:
       probability: 1.0
+

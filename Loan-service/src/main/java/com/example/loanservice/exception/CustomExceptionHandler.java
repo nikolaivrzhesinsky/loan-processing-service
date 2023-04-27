@@ -2,6 +2,7 @@ package com.example.loanservice.exception;
 
 import com.example.loanservice.dto.response.ResponseMessageError;
 import com.example.loanservice.exception.customException.*;
+import io.github.resilience4j.circuitbreaker.CallNotPermittedException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.ControllerAdvice;
@@ -63,6 +64,15 @@ public class CustomExceptionHandler extends ResponseEntityExceptionHandler {
         ErrorMessage message = new ErrorMessage("ORDER_IMPOSSIBLE_TO_DELETE"
                 , "Невозможно удалить заявку");
         return ResponseEntity.status(HttpStatus.BAD_REQUEST)
+                .body(new ResponseMessageError(message));
+    }
+
+    @ExceptionHandler(CallNotPermittedException.class)
+    public ResponseEntity<?> handleTimeoutException() {
+
+        ErrorMessage message = new ErrorMessage(HttpStatus.REQUEST_TIMEOUT.name(),
+                "TimeoutException");
+        return ResponseEntity.status(HttpStatus.REQUEST_TIMEOUT)
                 .body(new ResponseMessageError(message));
     }
 
