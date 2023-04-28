@@ -1,0 +1,11 @@
+databaseChangeLog:
+  - changeSet:
+      id: change_update_type_credite_rate
+      author: Vrzesinsky
+      changes:
+        - tagDatabase:
+            tag: db_CR_type_tag
+        - modifyDataType:
+            columnName: credit_rating
+            newDataType: decimal
+            tableName: loan_order

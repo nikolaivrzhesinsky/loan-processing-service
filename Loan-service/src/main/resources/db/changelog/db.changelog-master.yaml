@@ -11,3 +11,5 @@ databaseChangeLog:
       file: db/changelog/changeset/changeset-update/update-ordertable-name.yaml
   - include:
       file: db/changelog/changeset/create-shedlock-table.yaml
+  - include:
+      file: db/changelog/changeset/changeset-update/update-credit_rate-type.yaml
