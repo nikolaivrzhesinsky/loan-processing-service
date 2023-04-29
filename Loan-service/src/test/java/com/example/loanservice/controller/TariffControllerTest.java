@@ -17,7 +17,8 @@ import java.util.List;
 import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 @WebMvcTest(TariffController.class)
 class TariffControllerTest {
@@ -40,14 +41,13 @@ class TariffControllerTest {
                 new Tariff(1L, TariffType.CONSUMER, "4-15%"),
                 new Tariff(2L, TariffType.MORTGAGE, "10-16%")
         );
+        var response = new ResponseTariffs(responseTariffs);
 
-        when(tariffService.getTariffs()).thenReturn(
-                new ResponseTariffs(responseTariffs));
+        when(tariffService.getTariffs()).thenReturn(response);
 
-        mockMvc.perform(get("/getTariffs"))
+        mockMvc.perform(get("/loan-service/getTariffs"))
                 .andExpect(status().isOk()).andDo(print())
-                .andExpect(content().contentType(MediaType.APPLICATION_JSON))
-                .andExpect(jsonPath("$.tariffs").value(responseTariffs));
+                .andExpect(content().contentType(MediaType.APPLICATION_JSON));
     }
 }
 

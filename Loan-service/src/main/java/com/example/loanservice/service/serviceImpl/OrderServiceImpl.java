@@ -58,7 +58,7 @@ public class OrderServiceImpl implements OrderService {
     }
 
     @Override
-    public void delOrderFromDB(RequestDelOrder requestDelOrder) {
+    public boolean delOrderFromDB(RequestDelOrder requestDelOrder) {
 
         Order orderFromDB = orderDAO.findOrderByOrderIdAndUserId(
                 requestDelOrder.getOrderId(), requestDelOrder.getUserId());
@@ -72,6 +72,7 @@ public class OrderServiceImpl implements OrderService {
             orderDAO.deleteOrderByOrderId(orderFromDB.getOrder_id());
             log.info("Order was deleted");
         }
+        return true;
     }
 
     @Override

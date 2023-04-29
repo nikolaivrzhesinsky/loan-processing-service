@@ -11,7 +11,7 @@ public interface OrderService {
 
     ResponseOrderStatus showOrderStatus(String orderId);
 
-    void delOrderFromDB(RequestDelOrder requestDelOrder);
+    boolean delOrderFromDB(RequestDelOrder requestDelOrder);
 
     void resolveForLoanOrders();
 }

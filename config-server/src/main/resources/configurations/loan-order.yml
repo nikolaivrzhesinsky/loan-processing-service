@@ -28,8 +28,8 @@ resilience4j:
   circuitbreaker:
     instances:
       loan-order:
-        failure-rate-threshold: 100
-        sliding-window-size: 1
+        failure-rate-threshold: 30
+        sliding-window-size: 3
         sliding-window-type: count-based
         wait-duration-in-open-state: 1m
         slow-call-duration-threshold: 1s
