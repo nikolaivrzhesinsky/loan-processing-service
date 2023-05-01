@@ -1,11 +1,16 @@
 package com.example.loanservice.entity;
 
 import com.example.loanservice.entity.enums.OrderStatus;
+import com.example.loanservice.service.utilService.RandomGeneratorService;
 import jakarta.persistence.Id;
 import jakarta.persistence.Table;
 import lombok.*;
 
+import java.math.BigDecimal;
+import java.math.RoundingMode;
 import java.time.LocalDateTime;
+import java.util.Random;
+import java.util.UUID;
 
 @Table(name = "loan_order")
 @Getter
@@ -13,7 +18,6 @@ import java.time.LocalDateTime;
 @ToString
 @NoArgsConstructor
 @AllArgsConstructor
-@Builder
 public class Order {
 
     @Id
@@ -28,6 +32,33 @@ public class Order {
     private LocalDateTime time_insert;
     private LocalDateTime time_update;
 
+    @Builder
+    public Order(Long user_id, Long tariff_id) {
+
+        this.order_id = UUID.randomUUID().toString();
+        this.user_id = user_id;
+        this.tariff_id = tariff_id;
+        this.credit_rating = RandomGeneratorService
+                .generateDoubleNumBound(0.10, 0.90, 2);
+        this.status = OrderStatus.IN_PROGRESS;
+        this.time_insert = LocalDateTime.now();
+        this.time_update = LocalDateTime.now();
+
+    }
+
+    private Double onCreateGenerateCredRat() {
+
+        double lowerBound = 0.10;
+        double upperBound = 0.90;
+        int decimalPlaces = 2;
+
+        final double dbl =
+                new Random().nextDouble() * (upperBound - lowerBound) + lowerBound;
+        BigDecimal bd = BigDecimal.valueOf(dbl)
+                .setScale(decimalPlaces, RoundingMode.HALF_UP);
+        return bd.doubleValue();
+
+    }
 
     @Override
     public boolean equals(Object o) {

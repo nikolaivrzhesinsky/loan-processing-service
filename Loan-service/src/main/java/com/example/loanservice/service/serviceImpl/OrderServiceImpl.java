@@ -17,13 +17,9 @@ import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.math.BigDecimal;
-import java.math.RoundingMode;
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Objects;
-import java.util.Random;
-import java.util.UUID;
 
 @Service
 @Slf4j
@@ -40,7 +36,7 @@ public class OrderServiceImpl implements OrderService {
             throw new TARIFF_NOT_FOUND("Тариф не найден");
         }
         checkUsersOrders(requestOrder);
-        Order newOrder = createOrder(requestOrder);
+        Order newOrder = new Order(requestOrder.getUserId(), requestOrder.getTariffId());
         orderDAO.save(newOrder);
 
         return new ResponseOrderId(newOrder.getOrder_id());
@@ -93,13 +89,13 @@ public class OrderServiceImpl implements OrderService {
         } else {
             order.setStatus(OrderStatus.APPROVED);
         }
-        order.setTime_update(onCreateUpdateTime());
+        order.setTime_update(LocalDateTime.now());
         log.info(order.getStatus().toString());
 
         orderDAO.update(order.getId(), order);
     }
 
-    private void checkUsersOrders(RequestNewOrder requestOrder) {
+    public void checkUsersOrders(RequestNewOrder requestOrder) {
 
         List<Order> ordersByTariff = orderDAO
                 .findOrdersByUserId(requestOrder.getUserId());
@@ -120,43 +116,6 @@ public class OrderServiceImpl implements OrderService {
                 && (orderByTariff.getTime_update().plusMinutes(2)).isAfter(LocalDateTime.now())) {
             throw new TRY_LATER("Try later");
         }
-    }
-
-
-    private Order createOrder(RequestNewOrder requestOrder) {
-
-        return Order.builder()
-                .order_id(onCreateOrderId())
-                .user_id(requestOrder.getUserId())
-                .tariff_id(requestOrder.getTariffId())
-                .credit_rating(onCreateGenerateCredRat())
-                .status(OrderStatus.IN_PROGRESS)
-                .time_insert(onCreateUpdateTime())
-                .time_update(onCreateUpdateTime())
-                .build();
-    }
-
-
-    private LocalDateTime onCreateUpdateTime() {
-        return LocalDateTime.now();
-    }
-
-    private String onCreateOrderId() {
-        return UUID.randomUUID().toString();
-    }
-
-    private Double onCreateGenerateCredRat() {
-
-        double lowerBound = 0.10;
-        double upperBound = 0.90;
-        int decimalPlaces = 2;
-
-        final double dbl =
-                new Random().nextDouble() * (upperBound - lowerBound) + lowerBound;
-        BigDecimal bd = BigDecimal.valueOf(dbl)
-                .setScale(decimalPlaces, RoundingMode.HALF_UP);
-        return bd.doubleValue();
-
     }
 
 }
