@@ -2,12 +2,12 @@ package com.example.loanservice.exception.customException;
 
 import java.io.Serial;
 
-public class ORDER_NOT_FOUND extends RuntimeException {
+public class LoanConsiderationException extends RuntimeException {
 
     @Serial
     private static final long serialVersionUID = 1L;
 
-    public ORDER_NOT_FOUND(String msg) {
+    public LoanConsiderationException(String msg) {
         super(msg);
     }
 }

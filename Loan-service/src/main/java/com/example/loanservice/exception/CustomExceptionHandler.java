@@ -12,7 +12,7 @@ import org.springframework.web.servlet.mvc.method.annotation.ResponseEntityExcep
 @ControllerAdvice
 public class CustomExceptionHandler extends ResponseEntityExceptionHandler {
 
-    @ExceptionHandler(TARIFF_NOT_FOUND.class)
+    @ExceptionHandler(TariffNotFoundException.class)
     public ResponseEntity<ResponseMessageError> handleTARIFF_NOT_FOUNDException(Exception ex) {
 
         ErrorMessage message = new ErrorMessage("TARIFF_NOT_FOUND"
@@ -22,7 +22,7 @@ public class CustomExceptionHandler extends ResponseEntityExceptionHandler {
                 );
     }
 
-    @ExceptionHandler(LOAN_CONSIDERATION.class)
+    @ExceptionHandler(LoanConsiderationException.class)
     public ResponseEntity<ResponseMessageError> handleLOAN_CONSIDERATIONException(Exception ex) {
 
         ErrorMessage message = new ErrorMessage("LOAN_CONSIDERATION"
@@ -31,7 +31,7 @@ public class CustomExceptionHandler extends ResponseEntityExceptionHandler {
                 .body(new ResponseMessageError(message));
     }
 
-    @ExceptionHandler(LOAN_ALREADY_APPROVED.class)
+    @ExceptionHandler(LoanAlreadyApprovedException.class)
     public ResponseEntity<ResponseMessageError> handleLOAN_ALREADY_APPROVEDException(Exception ex) {
 
         ErrorMessage message = new ErrorMessage("LOAN_ALREADY_APPROVED"
@@ -40,7 +40,7 @@ public class CustomExceptionHandler extends ResponseEntityExceptionHandler {
                 .body(new ResponseMessageError(message));
     }
 
-    @ExceptionHandler(TRY_LATER.class)
+    @ExceptionHandler(TryLaterException.class)
     public ResponseEntity<ResponseMessageError> handleTRY_LATERException(Exception ex) {
 
         ErrorMessage message = new ErrorMessage("TRY_LATER"
@@ -49,7 +49,7 @@ public class CustomExceptionHandler extends ResponseEntityExceptionHandler {
                 .body(new ResponseMessageError(message));
     }
 
-    @ExceptionHandler(ORDER_NOT_FOUND.class)
+    @ExceptionHandler(OrderNotFoundException.class)
     public ResponseEntity<ResponseMessageError> handleORDER_NOT_FOUNDException(Exception ex) {
 
         ErrorMessage message = new ErrorMessage("ORDER_NOT_FOUND"
@@ -58,7 +58,7 @@ public class CustomExceptionHandler extends ResponseEntityExceptionHandler {
                 .body(new ResponseMessageError(message));
     }
 
-    @ExceptionHandler(ORDER_IMPOSSIBLE_TO_DELETE.class)
+    @ExceptionHandler(OrderImpossibleToDeleteException.class)
     public ResponseEntity<ResponseMessageError> handleORDER_IMPOSSIBLE_TO_DELETEException(Exception ex) {
 
         ErrorMessage message = new ErrorMessage("ORDER_IMPOSSIBLE_TO_DELETE"

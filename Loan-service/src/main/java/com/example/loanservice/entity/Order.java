@@ -6,10 +6,7 @@ import jakarta.persistence.Id;
 import jakarta.persistence.Table;
 import lombok.*;
 
-import java.math.BigDecimal;
-import java.math.RoundingMode;
 import java.time.LocalDateTime;
-import java.util.Random;
 import java.util.UUID;
 
 @Table(name = "loan_order")
@@ -46,20 +43,6 @@ public class Order {
 
     }
 
-    private Double onCreateGenerateCredRat() {
-
-        double lowerBound = 0.10;
-        double upperBound = 0.90;
-        int decimalPlaces = 2;
-
-        final double dbl =
-                new Random().nextDouble() * (upperBound - lowerBound) + lowerBound;
-        BigDecimal bd = BigDecimal.valueOf(dbl)
-                .setScale(decimalPlaces, RoundingMode.HALF_UP);
-        return bd.doubleValue();
-
-    }
-
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
@@ -67,7 +50,6 @@ public class Order {
 
         Order order = (Order) o;
 
-        if (!id.equals(order.id)) return false;
         if (!order_id.equals(order.order_id)) return false;
         if (!user_id.equals(order.user_id)) return false;
         if (!tariff_id.equals(order.tariff_id)) return false;

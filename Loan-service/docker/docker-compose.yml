@@ -5,6 +5,11 @@ services:
     environment:
       - POSTGRES_USER=postgres
       - POSTGRES_PASSWORD=root
-      - POSTGRES_DB=mts-db
+      - POSTGRES_DB=mts-loan-db
     ports:
       - '5432:5431'
+  zipkin:
+    container_name: zipkin
+    image: openzipkin/zipkin
+    ports:
+      - "9411:9411"

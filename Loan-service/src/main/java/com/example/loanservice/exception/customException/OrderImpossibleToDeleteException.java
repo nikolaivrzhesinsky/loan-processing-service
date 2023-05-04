@@ -2,12 +2,12 @@ package com.example.loanservice.exception.customException;
 
 import java.io.Serial;
 
-public class TARIFF_NOT_FOUND extends RuntimeException {
+public class OrderImpossibleToDeleteException extends RuntimeException {
 
     @Serial
     private static final long serialVersionUID = 1L;
 
-    public TARIFF_NOT_FOUND(String msg) {
+    public OrderImpossibleToDeleteException(String msg) {
         super(msg);
     }
 }

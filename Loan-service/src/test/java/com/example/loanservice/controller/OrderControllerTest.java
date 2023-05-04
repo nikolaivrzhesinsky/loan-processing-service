@@ -57,7 +57,7 @@ class OrderControllerTest {
 
         var requestNewOrder = new RequestNewOrder(120356894755L, 5L);
         when(orderService.handlingNewOrder(any(RequestNewOrder.class)))
-                .thenThrow(TARIFF_NOT_FOUND.class);
+                .thenThrow(TariffNotFoundException.class);
         mockMvc.perform(post("/loan-service/order")
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(objectMapper.writeValueAsString(requestNewOrder)))
@@ -69,7 +69,7 @@ class OrderControllerTest {
 
         var requestNewOrder = new RequestNewOrder(120356894755L, 5L);
         when(orderService.handlingNewOrder(any(RequestNewOrder.class)))
-                .thenThrow(LOAN_CONSIDERATION.class);
+                .thenThrow(LoanConsiderationException.class);
         mockMvc.perform(post("/loan-service/order")
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(objectMapper.writeValueAsString(requestNewOrder)))
@@ -81,7 +81,7 @@ class OrderControllerTest {
 
         var requestNewOrder = new RequestNewOrder(120356894755L, 5L);
         when(orderService.handlingNewOrder(any(RequestNewOrder.class)))
-                .thenThrow(LOAN_ALREADY_APPROVED.class);
+                .thenThrow(LoanAlreadyApprovedException.class);
         mockMvc.perform(post("/loan-service/order")
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(objectMapper.writeValueAsString(requestNewOrder)))
@@ -93,7 +93,7 @@ class OrderControllerTest {
 
         var requestNewOrder = new RequestNewOrder(120356894755L, 5L);
         when(orderService.handlingNewOrder(any(RequestNewOrder.class)))
-                .thenThrow(TRY_LATER.class);
+                .thenThrow(TryLaterException.class);
         mockMvc.perform(post("/loan-service/order")
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(objectMapper.writeValueAsString(requestNewOrder)))
@@ -131,7 +131,7 @@ class OrderControllerTest {
         var reqDel = new RequestDelOrder("320890f8-bc40-4e00-8a98-5ebf294e2952"
                 , 120356894755L);
         when(orderService.delOrderFromDB(any(RequestDelOrder.class)))
-                .thenThrow(ORDER_NOT_FOUND.class);
+                .thenThrow(OrderNotFoundException.class);
 
         mockMvc.perform(post("/loan-service/deleteOrder")
                         .contentType(MediaType.APPLICATION_JSON)
@@ -145,7 +145,7 @@ class OrderControllerTest {
         var reqDel = new RequestDelOrder("320890f8-bc40-4e00-8a98-5ebf294e2952"
                 , 120356894755L);
         when(orderService.delOrderFromDB(any(RequestDelOrder.class)))
-                .thenThrow(ORDER_IMPOSSIBLE_TO_DELETE.class);
+                .thenThrow(OrderImpossibleToDeleteException.class);
 
         mockMvc.perform(post("/loan-service/deleteOrder")
                         .contentType(MediaType.APPLICATION_JSON)
