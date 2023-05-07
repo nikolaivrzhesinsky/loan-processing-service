@@ -4,5 +4,11 @@ spring:
   config:
     import: optional:configserver:http://localhost:8888
 
+springdoc:
+  swagger-ui:
+    path: /loan-order-doc
+  api-docs:
+    path: /loan-order-api-doc
+
 
 
