@@ -1,0 +1,303 @@
+{
+  "openapi": "3.0.1",
+  "info": {
+    "title": "Loan-order MTS",
+    "description": "Documentation to loan-order service",
+    "contact": {
+      "name": "Vrzesinsky",
+      "url": "https://t.me/puuuccik"
+    },
+    "version": "1.0.0"
+  },
+  "servers": [
+    {
+      "url": "http://localhost:8081",
+      "description": "dev version of loan-order service"
+    }
+  ],
+  "paths": {
+    "/loan-service/order": {
+      "post": {
+        "tags": [
+          "order-controller"
+        ],
+        "description": "adding new order for loan",
+        "operationId": "addOrder",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/RequestNewOrder"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "Success Created",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ResponseOrderId"
+                },
+                "example": {
+                  "data": {
+                    "orderId": "74aab8f8-7309-4276-bf3e-e06e92a1bc79"
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Order already in consideration",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorMessage"
+                },
+                "examples": {
+                  "LOAN_CONSIDERATION": {
+                    "description": "LOAN_CONSIDERATION",
+                    "value": {
+                      "error": {
+                        "code": "LOAN_CONSIDERATION",
+                        "message": "Order already in consideration"
+                      }
+                    }
+                  },
+                  "LOAN_ALREADY_APPROVED": {
+                    "description": "LOAN_ALREADY_APPROVED",
+                    "value": {
+                      "error": {
+                        "code": "LOAN_ALREADY_APPROVED",
+                        "message": "Order was already approved"
+                      }
+                    }
+                  },
+                  "TRY_LATER": {
+                    "description": "TRY_LATER",
+                    "value": {
+                      "error": {
+                        "code": "TRY_LATER",
+                        "message": "Try to make order later"
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/loan-service/deleteOrder": {
+      "post": {
+        "tags": [
+          "order-controller"
+        ],
+        "description": "del order from service",
+        "operationId": "deleteOrder",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/RequestDelOrder"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "success deleting",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "type": "object"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Order already in consideration",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorMessage"
+                },
+                "examples": {
+                  "ORDER_NOT_FOUND": {
+                    "description": "ORDER_NOT_FOUND",
+                    "value": {
+                      "error": {
+                        "code": "ORDER_NOT_FOUND",
+                        "message": "Заявка не найдена"
+                      }
+                    }
+                  },
+                  "ORDER_IMPOSSIBLE_TO_DELETE": {
+                    "description": "ORDER_IMPOSSIBLE_TO_DELETE",
+                    "value": {
+                      "error": {
+                        "code": "ORDER_IMPOSSIBLE_TO_DELETE",
+                        "message": "Невозможно удалить заявку"
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/loan-service/getTariffs": {
+      "get": {
+        "tags": [
+          "tariff-controller"
+        ],
+        "description": "show all tariffs from DB",
+        "operationId": "showTariffs",
+        "responses": {
+          "200": {
+            "description": "Success shown",
+            "content": {
+              "application/json": {
+                "example": {
+                  "data": {
+                    "tariffs": [
+                      {
+                        "id": 1,
+                        "type": "CONSUMER",
+                        "interest_rate": "8-15%"
+                      },
+                      {
+                        "id": 2,
+                        "type": "MORTGAGE",
+                        "interest_rate": "9-17%"
+                      },
+                      {
+                        "id": 3,
+                        "type": "POS",
+                        "interest_rate": "4-9%"
+                      },
+                      {
+                        "id": 4,
+                        "type": "CREDIT_CARD",
+                        "interest_rate": "10-20%"
+                      }
+                    ]
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/loan-service/getStatusOrder": {
+      "get": {
+        "tags": [
+          "order-controller"
+        ],
+        "description": "get order status by req param",
+        "operationId": "getOrdersStatus",
+        "parameters": [
+          {
+            "name": "orderId",
+            "in": "query",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "success getting order status",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ResponseOrderId"
+                },
+                "example": {
+                  "orderStatus": "APPROVED"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Order already in consideration",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorMessage"
+                },
+                "examples": {
+                  "ORDER_NOT_FOUND": {
+                    "description": "ORDER_NOT_FOUND",
+                    "value": {
+                      "error": {
+                        "code": "ORDER_NOT_FOUND",
+                        "message": "Заявка не найдена"
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  },
+  "components": {
+    "schemas": {
+      "ResponseOrderId": {
+        "type": "object",
+        "properties": {
+          "orderId": {
+            "type": "string"
+          }
+        }
+      },
+      "ErrorMessage": {
+        "type": "object",
+        "properties": {
+          "code": {
+            "type": "string"
+          },
+          "message": {
+            "type": "string"
+          }
+        }
+      },
+      "RequestNewOrder": {
+        "type": "object",
+        "properties": {
+          "userId": {
+            "type": "integer",
+            "format": "int64"
+          },
+          "tariffId": {
+            "type": "integer",
+            "format": "int64"
+          }
+        }
+      },
+      "RequestDelOrder": {
+        "type": "object",
+        "properties": {
+          "orderId": {
+            "type": "string"
+          },
+          "userId": {
+            "type": "integer",
+            "format": "int64"
+          }
+        }
+      }
+    }
+  }
+}
