@@ -24,7 +24,6 @@ public class OrderDAO {
                         "values (?,?,?,?,?,?,?)", newOrder.getOrder_id(), newOrder.getUser_id()
                 , newOrder.getTariff_id(), newOrder.getCredit_rating()
                 , newOrder.getStatus().toString(), newOrder.getTime_insert(), newOrder.getTime_update());
-        log.info("Order was added");
     }
 
     public List<Order> findOrdersByUserId(Long userId) {
@@ -73,7 +72,6 @@ public class OrderDAO {
                 , updateOrder.getTariff_id(), updateOrder.getCredit_rating()
                 , updateOrder.getStatus().toString(), updateOrder.getTime_insert()
                 , updateOrder.getTime_update(), id);
-        log.info("Order was updated");
     }
 
 }

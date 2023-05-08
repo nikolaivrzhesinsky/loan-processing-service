@@ -67,7 +67,6 @@ public class OrderServiceImpl implements OrderService {
             throw new OrderImpossibleToDeleteException("Невозможно удалить заявку");
         } else {
             orderDAO.deleteOrderByOrderId(orderFromDB.getOrder_id());
-            log.info("Order was deleted");
         }
         return true;
     }

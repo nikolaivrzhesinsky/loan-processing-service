@@ -53,7 +53,6 @@ public class CheckOrdersUtilService {
             order.setStatus(OrderStatus.APPROVED);
         }
         order.setTime_update(LocalDateTime.now());
-        log.info(order.getStatus().toString());
 
         orderDAO.update(order.getId(), order);
     }
