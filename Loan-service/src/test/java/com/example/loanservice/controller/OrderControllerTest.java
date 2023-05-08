@@ -67,7 +67,7 @@ class OrderControllerTest {
     @Test
     void shouldNotAddOrderAndThrowLOAN_CONSIDERATION() throws Exception {
 
-        var requestNewOrder = new RequestNewOrder(120356894755L, 5L);
+        var requestNewOrder = new RequestNewOrder(120356894755L, 2L);
         when(orderService.handlingNewOrder(any(RequestNewOrder.class)))
                 .thenThrow(LoanConsiderationException.class);
         mockMvc.perform(post("/loan-service/order")
@@ -79,7 +79,7 @@ class OrderControllerTest {
     @Test
     void shouldNotAddOrderAndThrowLOAN_ALREADY_APPROVED() throws Exception {
 
-        var requestNewOrder = new RequestNewOrder(120356894755L, 5L);
+        var requestNewOrder = new RequestNewOrder(120356894755L, 2L);
         when(orderService.handlingNewOrder(any(RequestNewOrder.class)))
                 .thenThrow(LoanAlreadyApprovedException.class);
         mockMvc.perform(post("/loan-service/order")
@@ -91,7 +91,7 @@ class OrderControllerTest {
     @Test
     void shouldNotAddOrderAndThrowTRY_LATER() throws Exception {
 
-        var requestNewOrder = new RequestNewOrder(120356894755L, 5L);
+        var requestNewOrder = new RequestNewOrder(120356894755L, 2L);
         when(orderService.handlingNewOrder(any(RequestNewOrder.class)))
                 .thenThrow(TryLaterException.class);
         mockMvc.perform(post("/loan-service/order")
