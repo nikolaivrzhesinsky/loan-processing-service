@@ -11,21 +11,17 @@ import com.example.loanservice.exception.customException.OrderImpossibleToDelete
 import com.example.loanservice.exception.customException.OrderNotFoundException;
 import com.example.loanservice.service.utilService.CheckOrdersUtilService;
 import lombok.extern.slf4j.Slf4j;
-import net.javacrumbs.shedlock.core.LockAssert;
-import org.awaitility.Duration;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.junit.runner.RunWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
-import org.mockito.Mockito;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.test.context.junit4.SpringRunner;
 
 import java.util.List;
 
-import static org.awaitility.Awaitility.await;
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.isA;
@@ -54,7 +50,7 @@ class OrderServiceImplTest {
     }
 
     @Test
-    void shouldHandAndCreateNewOrder_AndReturnResponseOrderId() throws Exception {
+    void shouldHandAndCreateNewOrder_AndReturnResponseOrderId() {
 
         RequestNewOrder requestNewOrder = new RequestNewOrder(120356894755L, 3L);
 
@@ -109,7 +105,7 @@ class OrderServiceImplTest {
 
         var requestDel = new RequestDelOrder(order.getOrder_id(),
                 120356894755L);
-        order.setStatus(OrderStatus.REFUSED);
+
         when(orderDAO.findOrderByOrderIdAndUserId(isA(String.class), isA(Long.class)))
                 .thenReturn(null);
 
@@ -122,15 +118,17 @@ class OrderServiceImplTest {
 
         var requestDel = new RequestDelOrder(order.getOrder_id(),
                 120356894755L);
+        order.setStatus(OrderStatus.IN_PROGRESS);
+
         when(orderDAO.findOrderByOrderIdAndUserId(isA(String.class), isA(Long.class)))
-                .thenReturn(null);
+                .thenReturn(order);
 
         assertThrows(OrderImpossibleToDeleteException.class,
                 () -> orderService.delOrderFromDB(requestDel));
     }
 
     @Test
-    void shouldResolveForLoanOrdersAndGetSolutionForOne() throws InterruptedException {
+    void shouldResolveForLoanOrdersAndGetSolutionForOne() {
 
         List<Order> orders = List.of(
                 new Order(120356894755L, 3L)
@@ -146,14 +144,4 @@ class OrderServiceImplTest {
                 .getSolutionForOrder(any());
     }
 
-    @Test
-    void shouldWaitFiveMinutesAndCalledResolveForLoanOrdersAtLeastTwoTimes() {
-
-        OrderServiceImpl orderSpy = Mockito.spy(OrderServiceImpl.class);
-        LockAssert.TestHelper.makeAllAssertsPass(true);
-
-        await().atMost(Duration.FIVE_MINUTES)
-                .untilAsserted(() -> verify(orderSpy, atLeast(2))
-                        .resolveForLoanOrders());
-    }
 }

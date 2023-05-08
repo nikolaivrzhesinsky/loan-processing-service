@@ -1,0 +1,15 @@
+databaseChangeLog:
+  - changeSet:
+      id: add index orderId-userId
+      author: Vrzesinsky
+      changes:
+        - tagDatabase:
+            tag: db_index_orderId-userId_tag
+        - createIndex:
+            columns:
+              - column:
+                  name: order_id
+              - column:
+                  name: user_id
+            indexName: order_id-user_id_index
+            tableName: loan_order

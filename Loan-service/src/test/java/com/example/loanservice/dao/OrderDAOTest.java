@@ -69,7 +69,7 @@ class OrderDAOTest {
     }
 
     @Test
-    void findOrderStatusById() {
+    void shouldFindOrderStatusById() {
         initOrders();
         OrderDAO orderDAO = new OrderDAO(jdbcTemplate);
         assertEquals("APPROVED", orderDAO
